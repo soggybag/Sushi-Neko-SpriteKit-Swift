@@ -83,7 +83,7 @@ playButton = childNodeWithName("playButton") as! MSButtonNode
 ```
 >
 
-Now the button is connected you need to some code to execute when the button is touched.
+Now the button is connected you need to add some code to execute when the button is touched.
 
 > [action]
 > Add the following code to `didMoveToView(...)`
