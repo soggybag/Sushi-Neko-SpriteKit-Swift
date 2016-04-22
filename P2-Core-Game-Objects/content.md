@@ -56,7 +56,7 @@ An *Enumeration* would work well for the first job, knowing what *Side* the chop
 when you need to test for cat vs chopstick collisions.
 
 > [action]
-> Add the following code to the top of *GameScene.sks* before the class definition.
+> Add the following code to the top of *GameScene.swift* before the class definition.
 >
 ```
 /* Tracking enum for use with character and sushi side */
