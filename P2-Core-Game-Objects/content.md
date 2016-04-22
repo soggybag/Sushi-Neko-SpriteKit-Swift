@@ -120,7 +120,6 @@ Let's setup a function to handle this.
 ```
 func connectChopsticks() {
   /* Connect our child chopstick nodes */
-
   rightChopstick = childNodeWithName("rightChopstick") as! SKSpriteNode
   leftChopstick = childNodeWithName("leftChopstick") as! SKSpriteNode
 }
