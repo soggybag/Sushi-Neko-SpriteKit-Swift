@@ -125,7 +125,7 @@ Run the game again... Excellent
 Adding the score is very similar to adding health.  You will need to add a *SKLabel* to the *GameScene* to display the player's score in the scene and also a counter property to track the score and use this value to refresh the label.
 
 > [action]
-> Open *GameScene.sks* and drag across an *Label* from the *Object Library*, if you're having problems selecting the label to move it once it's in the scene.  You can also use the **Arrow Keys**, **Hold Shift** to move it in larger steps. You can of course set the *Position* to something like `(160,340)`
+> Open *GameScene.sks* and drag across a *Label* from the *Object Library*, if you're having problems selecting the label to move it once it's in the scene.  You can also use the **Arrow Keys**, **Hold Shift** to move it in larger steps. You can of course set the *Position* to something like `(160,340)`
 > Set the *Name* to `scoreLabel` and change the *Font* to something you like.
 > ![Score font selection](../Tutorial-Images/xcode_screenshot_font_selection.png)
 > Set the *Text* to `0` and set the *Z-Position* to `100`
