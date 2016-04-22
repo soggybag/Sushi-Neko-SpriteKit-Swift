@@ -76,10 +76,8 @@ A great place to add a steady decline would be in the `update(..)` method.
 override func update(currentTime: CFTimeInterval) {
   /* Called before each frame is rendered */
   if state != .Playing { return }
-
   /* Decrease Health */
   health -= 0.01
-
   /* Has the player ran out of health? */
   if health < 0 { gameOver() }
 }
