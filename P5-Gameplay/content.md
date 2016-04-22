@@ -108,7 +108,6 @@ Great, now you are changing the game state state, yet on it's own it doesn't mea
 ```
 /* Game not ready to play */
 if state == .GameOver || state == .Title { return }
-
 /* Game begins on first touch */
 if state == .Ready {
    state = .Playing
