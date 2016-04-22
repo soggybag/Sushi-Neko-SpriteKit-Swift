@@ -93,7 +93,7 @@ Run the game... The health bar should tick down and you eventually die and there
 To counter balance this decline you should give the player health every time they successfully punch the sushi.
 
 > [action]
-> After the collision check in `didMoveToView(...)` add:
+> After the collision check in `touchesBegan(...)` add:
 >
 ```
 /* Increment Health */
