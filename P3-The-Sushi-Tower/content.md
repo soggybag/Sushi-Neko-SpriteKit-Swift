@@ -120,8 +120,8 @@ func addRandomPieces(total: Int) {
       let lastPiece = sushiTower.last as SushiPiece!
       
       /* Need to ensure we don't create impossible sushi structures */
-      if lastPiece.side != .none {
-         addTowerPiece(.none)
+      if lastPiece.side != Side.none {
+         addTowerPiece(Side.none)
       } else {
       
          /* Random Number Generator */
