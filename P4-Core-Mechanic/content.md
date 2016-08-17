@@ -16,17 +16,17 @@ screen, the cat will be moved to the left/right side and then punch the first pi
 
 > [action]
 > Replace the `touchBegan(...)` method with the following:
-
+>
 ```
 override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
    /* Called when a touch begins */
-   
+>   
    /* We only need a single touch here */
    let touch = touches.first!
-     
+>     
    /* Get touch position in scene */
    let location = touch.location(in: self)
-        
+>        
    /* Was touch on left/right hand side of screen? */
    if location.x > size.width / 2 {
       character.side = .right
@@ -35,6 +35,7 @@ override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
    }
 }
 ```
+>
 
 You are performing a simple check to decide which side of the screen was touched.  Remember the property observer *didSet*,
 that you setup in *Character.swift* (Take a quick look)? When you set the *side* property the cat will move set its position
@@ -83,12 +84,13 @@ You will run this custom **Punch** action in whenever the *side* is set for the 
 
 > [action]
 > Open *Character.swift*, add the following inside the *didSet* observer after the `if/else` statement block.
-
+>
 ```
 /* Load/Run the punch action */
 let punch = SKAction(named: "Punch")!
 runAction(punch)
 ```
+>
 
 Run the game. Your cat should be able to punch now!
 
@@ -107,14 +109,15 @@ Let's tackle removing and adding sushi before applying the visual polish.
 > [action]
 > Open *GameScene.swift* and add the following code inside `touchBegan(...)` immediately after the **if/else** statement
 > block.
-
+>
 ```
 /* Remove from sushi tower array */
 sushiTower.removeFirst()
-
+>
 /* Add a new sushi piece to the top of the sushi tower*/
 addRandomPieces(1)
 ```
+>
 
 Run the game.... Well nothing much happens, this is because you are managing the sushi tower array correctly.  However, you
 are not removing the sushi visually from the scene.  
@@ -123,18 +126,19 @@ are not removing the sushi visually from the scene.
 
 > [action]
 > Replace this code block with:
-
+>
 ```
 /* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
 let firstPiece = sushiTower.first as SushiPiece!
-
+>
 /* Remove from sushi tower array */
 sushiTower.removeFirst()
 firstPiece.removeFromParent()
-
+>
 /* Add a new sushi piece to the top of the sushi tower */
 addRandomPieces(1)
 ```
+>
 
 Run the game... You can see the sushi being removed from the sushi tower.  Great, yet not quite what you want, would be
 better if the remaining sushi would drop down a position. Let's add this.
@@ -143,16 +147,17 @@ better if the remaining sushi would drop down a position. Let's add this.
 
 > [action]
 > Add the following code after the last block:
-
+>
 ```
 /* Drop all the sushi pieces down one place */
 for sushiPiece in sushiTower {
    sushiPiece.run(SKAction.move(by: CGVector(dx: 0, dy: -55), duration: 0.10))
-    
+>    
    /* Reduce zPosition to stop zPosition climbing over UI */
    sushiPiece.zPosition -= 1
 }
 ```
+>
 
 Run the game... Should look a lot better now.
 
@@ -190,30 +195,31 @@ facilitate this.
 
 > [action]
 > Open *SushiPiece.swift* and add the following method to the class:
-
+>
 ```
 func flip(_ side: Side) {
    /* Flip the sushi out of the screen */
-   
+>   
    var actionName: String = ""
-   
+>   
    if side == .left {
       actionName = "FlipRight"
    } else if side == .right {
       actionName = "FlipLeft"
    }
-   
+>   
    /* Load appropriate action */
    let flip = SKAction(named: actionName)!
-   
+>   
    /* Create a node removal action */
    let remove = SKAction.removeFromParent()
-   
+>   
    /* Build sequence, flip then remove from scene */
    let sequence = SKAction.sequence([flip,remove])
    run(sequence)
 }
 ```
+>
 
 Read through the comments, most of this should already be familiar to you.  You may not have seen the last section of code
 in which you build a *SKAction.sequence*, which is simply joining actions together.  In this case when the **Flip**
@@ -222,17 +228,18 @@ animation is complete you want the sushi to be removed from the game.  Currently
 
 > [action]
 > Open *GameScene.swift* and replace the following inside `touchesBegan(...)`
-
+>
 ```
 firstPiece.removeFromParent()
 ```
-
+>
 > with
-
+>
 ```
 /* Animate the punched sushi piece */
 firstPiece.flip(character.side)
 ```
+>
 
 Now run the game.... Flying sushi!
 
