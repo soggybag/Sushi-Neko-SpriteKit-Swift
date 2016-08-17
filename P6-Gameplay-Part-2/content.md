@@ -76,10 +76,10 @@ A great place to add a steady decline would be in the `update(..)` method.
 override func update(_ currentTime: TimeInterval) {
   /* Called before each frame is rendered */
   if state != .playing { return }
-    
+>    
   /* Decrease Health */
   health -= 0.01
-    
+>    
   /* Has the player ran out of health? */
   if health < 0 { gameOver() }
 }
