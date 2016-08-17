@@ -234,9 +234,9 @@ that you will want to track the *side* of the cat.
 
 ```
 import SpriteKit
->
+
 class Character: SKSpriteNode {
->    
+
     /* Character side */
     var side: Side = .left {
         didSet {
@@ -250,12 +250,12 @@ class Character: SKSpriteNode {
             }
         }
     }
->    
+    
     /* You are required to implement this for your subclass to work */
     override init(texture: SKTexture?, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
     }
->    
+    
     /* You are required to implement this for your subclass to work */
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
