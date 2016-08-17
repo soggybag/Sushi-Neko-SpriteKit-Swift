@@ -5,35 +5,39 @@ slug: core-mechanic
 
 #When cats attack
 
-Time to work on the games core mechanic, it's a lesser known fact that cat's will punch sushi as all they want is some sashimi.  Cats can also navigate space and time to teleport instantly from one side of the screen to the other and knock those sushi clean out of the sushi tower.
+Time to work on the games core mechanic, it's a lesser known fact that cat's will punch sushi as all they want is some
+sashimi.  Cats can also navigate space and time to teleport instantly from one side of the screen to the other and knock
+those sushi clean out of the sushi tower.
 
-You will be adding a simple touch mechanic to the game, if the player touches anywhere on the left/right hand side of the screen, the cat will be moved to the left/right side and then punch the first piece of sushi in the sushi tower.
+You will be adding a simple touch mechanic to the game, if the player touches anywhere on the left/right hand side of the
+screen, the cat will be moved to the left/right side and then punch the first piece of sushi in the sushi tower.
 
 ##Touch control
 
 > [action]
 > Replace the `touchBegan(...)` method with the following:
->
+
 ```
 override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
    /* Called when a touch begins */
->
-    for touch in touches {
+   
+   for touch in touches {
       /* Get touch position in scene */
       let location = touch.locationInNode(self)
->        
+      
       /* Was touch on left/right hand side of screen? */
       if location.x > size.width / 2 {
-        character.side = .Right
+        character.side = .right
       } else {
-        character.side = .Left
+        character.side = .left
       }
     }
 }
 ```
->
 
-You are performing a simple check to decide which side of the screen was touched.  Remember the property observer *didSet*, that you setup in *Character.swift* (Take a quick look)? When you set the *side* property the cat will move set its position appropriately.
+You are performing a simple check to decide which side of the screen was touched.  Remember the property observer *didSet*,
+that you setup in *Character.swift* (Take a quick look)? When you set the *side* property the cat will move set its position
+appropriately.
 
 Run the game... You should have a working cat teleporter.
 
@@ -64,8 +68,10 @@ This will open up the empty *AnimationActions.sks*, and you should have an empty
 > Expand then **Punch** action timeline, click on the *Object library* and drag across an *AnimateWithTextures Action*.
 > ![Add AnimateWithTextures action](../Tutorial-Images/xcode_spritekit_add_animatewithtextures_action.png)
 >
-> To build the animation you need to drag in the *character2.png* and *character3.png* from the *Media Library* into the *Textures* box of the new action.
-> Set the *duration* to `0.15` as a punch should be snappy and **tick** `Restore`, this ensures when the punch is complete the cat will go back to it's default stance.
+> To build the animation you need to drag in the *character2.png* and *character3.png* from the *Media Library* into the
+> *Textures* box of the new action.
+> Set the *duration* to `0.15` as a punch should be snappy and **tick** `Restore`, this ensures when the punch is complete
+> the cat will go back to it's default stance.
 >
 > ![AnimateWithTextures attributes](../Tutorial-Images/xcode_spritekit_animatewithtextures_attributes.png)
 >
@@ -76,13 +82,12 @@ You will run this custom **Punch** action in whenever the *side* is set for the 
 
 > [action]
 > Open *Character.swift*, add the following inside the *didSet* observer after the `if/else` statement block.
->
+
 ```
 /* Load/Run the punch action */
 let punch = SKAction(named: "Punch")!
 runAction(punch)
 ```
->
 
 Run the game. Your cat should be able to punch now!
 
@@ -99,8 +104,9 @@ Looking good, next you will need to manage the sushi stack in response to a punc
 Let's tackle removing and adding sushi before applying the visual polish.
 
 > [action]
-> Open *GameScene.swift* and add the following code inside `touchBegan(...)` immediately after the **if/else** statement block.
->
+> Open *GameScene.swift* and add the following code inside `touchBegan(...)` immediately after the **if/else** statement
+> block.
+
 ```
 /* Remove from sushi tower array */
 sushiTower.removeFirst()
@@ -108,15 +114,15 @@ sushiTower.removeFirst()
 /* Add a new sushi piece to the top of the sushi tower*/
 addRandomPieces(1)
 ```
->
 
-Run the game.... Well nothing much happens, this is because you are managing the sushi tower array correctly.  However, you are not removing the sushi visually from the scene.  
+Run the game.... Well nothing much happens, this is because you are managing the sushi tower array correctly.  However, you
+are not removing the sushi visually from the scene.  
 
 ##Improving the cycle
 
 > [action]
 > Replace this code block with:
->
+
 ```
 /* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
 let firstPiece = sushiTower.first as SushiPiece!
@@ -128,24 +134,24 @@ firstPiece.removeFromParent()
 /* Add a new sushi piece to the top of the sushi tower */
 addRandomPieces(1)
 ```
->
 
-Run the game... You can see the sushi being removed from the sushi tower.  Great, yet not quite what you want, would be better if the remaining sushi would drop down a position. Let's add this.
+Run the game... You can see the sushi being removed from the sushi tower.  Great, yet not quite what you want, would be
+better if the remaining sushi would drop down a position. Let's add this.
 
 ##Moving the tower
 
 > [action]
 > Add the following code after the last block:
+
 ```
 /* Drop all the sushi pieces down one place */
-for node:SushiPiece in sushiTower {
-  node.runAction(SKAction.moveBy(CGVector(dx: 0, dy: -55), duration: 0.10))
->
-  /* Reduce zPosition to stop zPosition climbing over UI */
-  node.zPosition -= 1
+for node in sushiTower {
+   node.runAction(SKAction.moveBy(CGVector(dx: 0, dy: -55), duration: 0.10))
+   
+   /* Reduce zPosition to stop zPosition climbing over UI */
+   node.zPosition -= 1
 }
 ```
->
 
 Run the game... Should look a lot better now.
 
