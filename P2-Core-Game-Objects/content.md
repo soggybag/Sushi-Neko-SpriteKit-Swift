@@ -180,17 +180,19 @@ Time to connect the **sushiBasePiece**.
 
 > [action]
 > Open *GameScene.swift* and add the following property to the class.
+
 ```
 /* Game objects */
 var sushiBasePiece: SushiPiece!
 ```
+
 > Next create the code connection in `didMoveToView(...)`
 >
+
 ```
 /* Connect game objects */
 sushiBasePiece = childNodeWithName("sushiBasePiece") as! SushiPiece
 ```
->
 
 ##Connecting the chopsticks
 
