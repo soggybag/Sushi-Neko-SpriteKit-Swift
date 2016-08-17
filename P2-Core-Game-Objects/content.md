@@ -138,10 +138,10 @@ Great, this would be a good time to add a property to track the type of sushi pi
 > [action]
 > Add the following to the start of the *SushiPiece* class:
 >
+
 ```
 /* Sushi type */
 var side: Side = .none {
-
     didSet {
         switch side {
         case .left:
@@ -155,7 +155,6 @@ var side: Side = .none {
             leftChopstick.hidden = true
             rightChopstick.hidden = true
         }
-        
     }
 }
 ```
