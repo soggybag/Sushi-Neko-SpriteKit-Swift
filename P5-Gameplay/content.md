@@ -31,20 +31,21 @@ Previously you used an *Enumeration* type to define the possible *side* states f
 
 > [action]
 > Add the following code to the top of *GameScene.swift*
-
+>
 ```
 /* Tracking enum for game state */
 enum GameState {
     case title, ready, playing, gameOver
 }
 ```
+>
 
 You will need to implement a tracking property to the GameScene class, let's default it to `.title` as you would expect
 this to be first state the player experiences after opening the game.
 
 > [action]
 > Add the following property to the *GameScene* class.
-
+>
 ```
 /* Game management */
 var state: GameState = .title
@@ -70,31 +71,33 @@ Next you need to code connect the *playButton* to the **GameScene* class**, see 
 
 > [solution]
 > Open *GameScene.swift* and add following property to the class:
-
+>
 ```
 var playButton: MSButtonNode!
 ```
 
 > Next create the connection in `didMoveToView(...)`
-
+>
 ```
 /* UI game objects */
 playButton = childNodeWithName("playButton") as! MSButtonNode
 ```
+>
 
 Now the button is connected you need to add some code to execute when the button is touched.
 
 > [action]
 > Add the following code to `didMoveToView(...)`
-
+>
 ```
 /* Setup play button selection handler */
 playButton.selectedHandler = {
-
+>
     /* Start game */
     self.state = .ready
 }
 ```
+>
 
 Great, now you are changing the game state state, yet on it's own it doesn't mean much.  You need to use the game state 
 to enable/disable various elements of the game.  You don't want the cat to be able to move until the game is in a 
@@ -104,7 +107,7 @@ to enable/disable various elements of the game.  You don't want the cat to be ab
 
 > [action]
 > Add the following code to the top of `touchesBegan(...)`:
-
+>
 ```
 /* Game not ready to play */
 if state == .gameOver || state == .title { return }
@@ -113,6 +116,7 @@ if state == .ready {
    state = .playing
 }
 ```
+>
 
 You want to disable touch when the player is not `.Playing`, the first line covers this by simply returning from the 
 method when the player is on the title screen or dead.
@@ -137,27 +141,28 @@ the player has been hit and Game over.
 
 > [action]
 > Add the following code in `touchesBegan(...)` after:
-
+>
 ```
 /* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
 let firstPiece = sushiTower.first as SushiPiece!
 ```
-
+>
 ```
 /* Check character side against sushi piece side (this is our death collision check)*/
 if character.side == firstPiece?.side {
-        
+>        
     /* Drop all the sushi pieces down a place (visually) */
     for sushiPiece in sushiTower {
         sushiPiece.run(SKAction.move(by: CGVector(dx: 0, dy: -55), duration: 0.10))
     }
-        
+>        
     gameOver()
-        
+>        
     /* No need to continue as player dead */
     return
 }
 ```
+>
 
 That was a cheap and easy collision check, you may have noticed the visual sushi tower drop code is being used in the 
 same method twice.
@@ -175,38 +180,39 @@ Now you need to add a *gameOver* method, you will want to:
 
 > [action]
 > Add this new method to the *GameScene* class:
-
+>
 ```
 func gameOver() {
     /* Game over! */
-    
+>    
     state = .gameOver
-    
+>    
     /* Turn all the sushi pieces red*/
     for sushiPiece in sushiTower {
         sushiPiece.run(SKAction.colorize(with: UIColor.red, colorBlendFactor: 1.0, duration: 0.50))
     }
-    
+>    
     /* Make the player turn red */
     character.run(SKAction.colorize(with: UIColor.red, colorBlendFactor: 1.0, duration: 0.50))
-    
+>    
     /* Change play button selection handler */
     playButton.selectedHandler = {
-        
+>        
         /* Grab reference to our SpriteKit view */
         let skView = self.view as SKView!
-        
+>        
         /* Load Game scene */
         let scene = GameScene(fileNamed:"GameScene") as GameScene!
-        
+>        
         /* Ensure correct aspect mode */
         scene?.scaleMode = .aspectFill
-        
+>        
         /* Restart GameScene */
         skView?.presentScene(scene)
     }
 }
 ```
+>
 
 Read through the comments, most of this should be familiar. For a visual effect you're using the
 *SKAction.colorizeWithColor* to turn the tower and cat red.
