@@ -196,16 +196,17 @@ sushiBasePiece = childNodeWithName("sushiBasePiece") as! SushiPiece
 
 ##Connecting the chopsticks
 
-You need to ensure the *connectChopsticks* method is called. A good place to add this would be after the **sushiBasePiece** code connection.
+You need to ensure the *connectChopsticks* method is called. A good place to add this would be after the 
+**sushiBasePiece** code connection.
 
 > [action]
-> Open *GameScene.swift* and add a call to this method anywhere after the **sushiBasePiece** code connection in `didMoveToView(...)`
->
+> Open *GameScene.swift* and add a call to this method anywhere after the **sushiBasePiece** code connection 
+> in `didMoveToView(...)`
+
 ```
 /* Setup chopstick connections */
 sushiBasePiece.connectChopsticks()
 ```
->
 
 Run the game, it should now look like this:
 
@@ -218,17 +219,19 @@ Awesome, let's add the heroic feline.
 Time for our feline friend to enter the fray.
 
 > [action]
-> Drag in *character.png* and place it in on the left side of the sushi, set the *Z Position* to `1`.  A *Position* of `(70,165)` looks pretty good.  Set *Name* to `character` and *Custom Class* to `Character`.
+> Drag in *character.png* and place it in on the left side of the sushi, set the *Z Position* to `1`.  
+> A *Position* of `(70,165)` looks pretty good.  Set *Name* to `character` and *Custom Class* to `Character`.
 >
 
-You may have noticed you don't have a *Character* class yet, let's create one. It's similar to the *SushiPiece* in that you will want to track the *side* of the cat.
+You may have noticed you don't have a *Character* class yet, let's create one. It's similar to the *SushiPiece* in 
+that you will want to track the *side* of the cat.
 
 ##The Character class
 
 > [action]
 > Create a new *Swift* file (`File > New > File > Swift File`) and name it `Character.swift`.
 > Replace the contents of this file with:
->
+
 ```
 import SpriteKit
 >
@@ -259,25 +262,28 @@ class Character: SKSpriteNode {
     }
 }
 ```
->
+
 
 After the *SushiPiece* setup, this code should be fairly clear. There is no need to implement a handler for the 
 `.none` enum case as the cat can only every be on the `.left` or the `.right`.
 
-Next you need to code connect the cat, see if you can do this yourself. The process is the same as *sushiBasePiece*, just don't forget the name of this class :]
+Next you need to code connect the cat, see if you can do this yourself. The process is the same as *sushiBasePiece*, 
+just don't forget the name of this class :]
 
 > [solution]
 > Open *GameScene.swift* and add the following property to the class.
+
 ```
 var character: Character!
 ```
+
 > Next create the code connection in `didMoveToView(...)`
 >
+
 ```
 /* Connect game objects */
 character = childNodeWithName("character") as! Character
 ```
->
 
 Run the game, always good to frequently check everything is working after adding something new.
 
