@@ -168,7 +168,7 @@ When the score value changes the *text* property of the *scoreLabel* is updated 
 Time to give the player some points.
 
 > [action]
-> Add the following code after:
+> Add the following code in touchesBegan(...) after:
 >
 ```
 /* Increment Health */
