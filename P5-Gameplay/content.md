@@ -145,15 +145,15 @@ let firstPiece = sushiTower.first as SushiPiece!
 
 ```
 /* Check character side against sushi piece side (this is our death collision check)*/
-if character.side == firstPiece.side {
-
+if character.side == firstPiece?.side {
+        
     /* Drop all the sushi pieces down a place (visually) */
-   for sushiPiece in sushiTower {
-       sushiPiece.runAction(SKAction.moveBy(CGVector(dx: 0, dy: -55), duration: 0.10))
-   }
-
+    for sushiPiece in sushiTower {
+        sushiPiece.run(SKAction.move(by: CGVector(dx: 0, dy: -55), duration: 0.10))
+    }
+        
     gameOver()
-
+        
     /* No need to continue as player dead */
     return
 }
@@ -180,19 +180,19 @@ Now you need to add a *gameOver* method, you will want to:
 func gameOver() {
     /* Game over! */
     
-    state = .GameOver
+    state = .gameOver
     
     /* Turn all the sushi pieces red*/
-    for node:SushiPiece in sushiTower {
-        node.runAction(SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.50))
+    for sushiPiece in sushiTower {
+        sushiPiece.run(SKAction.colorize(with: UIColor.red, colorBlendFactor: 1.0, duration: 0.50))
     }
-     
+    
     /* Make the player turn red */
-    character.runAction(SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.50))
+    character.run(SKAction.colorize(with: UIColor.red, colorBlendFactor: 1.0, duration: 0.50))
     
     /* Change play button selection handler */
     playButton.selectedHandler = {
-    
+        
         /* Grab reference to our SpriteKit view */
         let skView = self.view as SKView!
         
@@ -200,10 +200,10 @@ func gameOver() {
         let scene = GameScene(fileNamed:"GameScene") as GameScene!
         
         /* Ensure correct aspect mode */
-        scene.scaleMode = .AspectFill
+        scene?.scaleMode = .aspectFill
         
         /* Restart GameScene */
-        skView.presentScene(scene)
+        skView?.presentScene(scene)
     }
 }
 ```
