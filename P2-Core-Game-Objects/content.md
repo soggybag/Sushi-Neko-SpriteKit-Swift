@@ -123,6 +123,7 @@ Let's setup a function to handle this.
 > [action]
 > Add the following method to your *SushiPiece* class.
 >
+
 ```
 func connectChopsticks() {
   /* Connect our child chopstick nodes */
