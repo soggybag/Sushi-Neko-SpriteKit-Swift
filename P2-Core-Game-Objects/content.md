@@ -5,10 +5,13 @@ slug: core-game-objects
 
 #Set the scene
 
-For Sushi Neko you will be using the default portrait orientation. You will need to modify the *GameScene.sks* scene size to a retina iPhone 5 resolution. It's a good design resolution to work with and the artwork was designed for this resolution, it will still work nicely for iPhone 6 upwards :]
+For Sushi Neko you will be using the default portrait orientation. You will need to modify the *GameScene.sks* scene 
+size to a retina iPhone 5 resolution. It's a good design resolution to work with and the artwork was designed for this
+resolution, it will still work nicely for iPhone 6 upwards :]
 
 > [action]
-> Open *GameScene.sks*, `Zoom Out` until you can see the yellow bounding box of the scene. Click on *Atrributes inspector* and set the *Size* to `(320,568)`
+> Open *GameScene.sks*, `Zoom Out` until you can see the yellow bounding box of the scene. Click on 
+> *Atrributes inspector* and set the *Size* to `(320,568)`
 > ![GameScene size](../Tutorial-Images/xcode_gamescene_size.png)
 >
 
@@ -22,7 +25,9 @@ It's nice to work with a backdrop, so let's add this before working on the core 
 
 #Creating Sushi
 
-Sushi is a key ingredient in our game mechanic, you will use it to build a sushi tower. To create the tower you will be randomly stacking sushi, before you can stack the tower you need to build a core piece of sushi.  This master piece will contain two chopsticks, one on the left and one on the right.  
+Sushi is a key ingredient in our game mechanic, you will use it to build a sushi tower. To create the tower you will 
+be randomly stacking sushi, before you can stack the tower you need to build a core piece of sushi.  This master piece 
+will contain two chopsticks, one on the left and one on the right.  
 
 This will enable 3 possible sushi pieces:
 
@@ -33,9 +38,10 @@ This will enable 3 possible sushi pieces:
 Let's setup this master sushi piece.
 
 > [action]
-> Drag in *roll.png* and place it in the center of the screen near the bottom. I would suggest around `(160,160)`, set the *Name* to `sushiBasePiece`.
-> Drag in *chopstick.png* and move it to the top-left side of the *sushiBasePiece*.
-> You want this *chopstick* to be part of our **Sushi Piece**, set *Parent* to `sushiBasePiece` and I would suggest a position of around `(-92,37)`.  Set the *Name* to `leftChopstick`
+> Drag in *roll.png* and place it in the center of the screen near the bottom. I would suggest around `(160,160)`, 
+> set the *Name* to `sushiBasePiece`. Drag in *chopstick.png* and move it to the top-left side of the *sushiBasePiece*.
+> You want this *chopstick* to be part of our **Sushi Piece**, set *Parent* to `sushiBasePiece` and I would suggest a
+> position of around `(-92,37)`.  Set the *Name* to `leftChopstick`
 >
 > ![Left chopstick setup](../Tutorial-Images/xcode_spritekit_leftchopstick.png)
 >
@@ -44,7 +50,7 @@ Now we need to add the right hand side chopstick. Can you do this?
 
 > [solution]
 > *Copy / Paste* the left chopstick, set the *Name* to `rightChopstick`.  
-There is a simple trick to flip the asset horizontally, set *Scale X* to `-1`.
+> There is a simple trick to flip the asset horizontally, set *Scale X* to `-1`.
 >
 > ![Flip horizontally](../Tutorial-Images/xcode_spritekit_flip_horizontal.png)
 >
@@ -61,7 +67,7 @@ when you need to test for cat vs chopstick collisions.
 ```
 /* Tracking enum for use with character and sushi side */
 enum Side {
-    case Left, Right, None
+    case left, right, none
 }
 ```
 
@@ -72,32 +78,32 @@ Next up you will create a custom sushi class called *SushiPiece*
 > [action]
 > Create a new *Swift* file (`File > New > File > Swift File`) and name it `SushiPiece.swift`.
 > Replace the contents of this file with:
->
+
 ```
 import SpriteKit
->
+
 class SushiPiece: SKSpriteNode {
->    
+    
     /* Chopsticks objects */
     var rightChopstick: SKSpriteNode!
     var leftChopstick: SKSpriteNode!
->    
+    
     /* You are required to implement this for your subclass to work */
     override init(texture: SKTexture?, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
     }
->    
+    
     /* You are required to implement this for your subclass to work */
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
->    
+    
 }
 ```
->
 
 This gives you a basic subclass of *SKSpriteNode*, with properties ready to connect to the chopsticks.
-Before you do this, you need to set the **sushiBasePiece** class to *SushiPiece*, you can do this via the *Custom Class Inspector*.
+Before you do this, you need to set the **sushiBasePiece** class to *SushiPiece*, you can do this via the 
+*Custom Class Inspector*.
 
 > [action]
 > Open *GameScene.sks*, select the *sushiBasePiece* and set *Custom Class* to `SushiPiece`
@@ -133,26 +139,25 @@ Great, this would be a good time to add a property to track the type of sushi pi
 >
 ```
 /* Sushi type */
-var side: Side = .None {
->
+var side: Side = .none {
+
     didSet {
         switch side {
-        case .Left:
+        case .left:
             /* Show left chopstick */
             leftChopstick.hidden = false
-        case .Right:
+        case .right:
             /* Show right chopstick */
             rightChopstick.hidden = false
-        case .None:
+        case .none:
             /* Hide all chopsticks */
             leftChopstick.hidden = true
             rightChopstick.hidden = true
         }
->        
+        
     }
 }
 ```
->
 
 ##Property observation
 
@@ -163,11 +168,11 @@ You now have a *Side* property to keep track of the sushi type, using your previ
 >
 ```
 /* Set the default side */
-side = .None
+side = .none
 ```
 >
 
-The default *side* will be set to `.None`, you're not quite ready to run the game yet. You need to connect the **sushiBasePiece** into our *GameScene.swift*
+The default *side* will be set to `.none`, you're not quite ready to run the game yet. You need to connect the **sushiBasePiece** into our *GameScene.swift*
 
 #Connecting the sushi
 
@@ -228,9 +233,9 @@ import SpriteKit
 class Character: SKSpriteNode {
 >    
     /* Character side */
-    var side: Side = .Left {
+    var side: Side = .left {
         didSet {
-            if side == .Left {
+            if side == .left {
                 xScale = 1
                 position.x = 70
             } else {
@@ -254,7 +259,8 @@ class Character: SKSpriteNode {
 ```
 >
 
-After the *SushiPiece* setup, this code should be fairly clear. There is no need to implement a handler for the `.None` enum case as the cat can only every be on the `.Left` or the `.Right`.
+After the *SushiPiece* setup, this code should be fairly clear. There is no need to implement a handler for the 
+`.none` enum case as the cat can only every be on the `.left` or the `.right`.
 
 Next you need to code connect the cat, see if you can do this yourself. The process is the same as *sushiBasePiece*, just don't forget the name of this class :]
 
