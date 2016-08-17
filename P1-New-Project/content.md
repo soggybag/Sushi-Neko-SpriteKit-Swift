@@ -6,7 +6,8 @@ slug: new-spritekit-project
 #Create a new SpriteKit project
 
 > [action]
-> Create a new *Game* project in Xcode named `SushiNeko` and check the *Language* is set to `Swift` and *Game Technology* is set to `SpriteKit`.
+> Create a new *Game* project in Xcode named `SushiNeko` and check the *Language* is set to `Swift` and 
+> *Game Technology* is set to `SpriteKit`.
 > ![Xcode new project](../Tutorial-Images/xcode_new_project.png)
 >
 
@@ -25,7 +26,7 @@ SpriteKit is missing some useful functionality, thankfully we have bundled some 
 
 > [action]
 > Download the [MakeSchool Utilities](../Utils.zip), unpack the folder and add it to your project as you
-did with the art pack.
+> did with the art pack.
 >
 
 Your project structure should hopefully look similar to this:
