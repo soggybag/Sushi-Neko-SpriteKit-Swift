@@ -124,7 +124,6 @@ Let's setup a function to handle this.
 > [action]
 > Add the following method to your *SushiPiece* class.
 >
-
 ```
 func connectChopsticks() {
   /* Connect our child chopstick nodes */
@@ -139,7 +138,6 @@ Great, this would be a good time to add a property to track the type of sushi pi
 > [action]
 > Add the following to the start of the *SushiPiece* class:
 >
-
 ```
 /* Sushi type */
 var side: Side = .none {
@@ -159,6 +157,7 @@ var side: Side = .none {
     }
 }
 ```
+>
 
 ##Property observation
 
@@ -181,19 +180,20 @@ Time to connect the **sushiBasePiece**.
 
 > [action]
 > Open *GameScene.swift* and add the following property to the class.
-
+>
 ```
 /* Game objects */
 var sushiBasePiece: SushiPiece!
 ```
+>
 
 > Next create the code connection in `didMoveToView(...)`
 >
-
 ```
 /* Connect game objects */
 sushiBasePiece = childNodeWithName("sushiBasePiece") as! SushiPiece
 ```
+>
 
 ##Connecting the chopsticks
 
@@ -203,11 +203,12 @@ You need to ensure the *connectChopsticks* method is called. A good place to add
 > [action]
 > Open *GameScene.swift* and add a call to this method anywhere after the **sushiBasePiece** code connection 
 > in `didMoveToView(...)`
-
+>
 ```
 /* Setup chopstick connections */
 sushiBasePiece.connectChopsticks()
 ```
+>
 
 Run the game, it should now look like this:
 
@@ -232,12 +233,12 @@ that you will want to track the *side* of the cat.
 > [action]
 > Create a new *Swift* file (`File > New > File > Swift File`) and name it `Character.swift`.
 > Replace the contents of this file with:
-
+>
 ```
 import SpriteKit
-
+>
 class Character: SKSpriteNode {
-
+>
     /* Character side */
     var side: Side = .left {
         didSet {
@@ -251,19 +252,19 @@ class Character: SKSpriteNode {
             }
         }
     }
-    
+>    
     /* You are required to implement this for your subclass to work */
     override init(texture: SKTexture?, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
     }
-    
+>
     /* You are required to implement this for your subclass to work */
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 }
 ```
-
+>
 
 After the *SushiPiece* setup, this code should be fairly clear. There is no need to implement a handler for the 
 `.none` enum case as the cat can only every be on the `.left` or the `.right`.
@@ -273,18 +274,19 @@ just don't forget the name of this class :]
 
 > [solution]
 > Open *GameScene.swift* and add the following property to the class.
-
+>
 ```
 var character: Character!
 ```
+>
 
 > Next create the code connection in `didMoveToView(...)`
 >
-
 ```
 /* Connect game objects */
 character = childNodeWithName("character") as! Character
 ```
+>
 
 Run the game, always good to frequently check everything is working after adding something new.
 
