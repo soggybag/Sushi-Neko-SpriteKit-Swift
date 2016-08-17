@@ -111,7 +111,7 @@ Let's tackle removing and adding sushi before applying the visual polish.
 ```
 /* Remove from sushi tower array */
 sushiTower.removeFirst()
->
+
 /* Add a new sushi piece to the top of the sushi tower*/
 addRandomPieces(1)
 ```
@@ -127,11 +127,11 @@ are not removing the sushi visually from the scene.
 ```
 /* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
 let firstPiece = sushiTower.first as SushiPiece!
->
+
 /* Remove from sushi tower array */
 sushiTower.removeFirst()
 firstPiece.removeFromParent()
->
+
 /* Add a new sushi piece to the top of the sushi tower */
 addRandomPieces(1)
 ```
@@ -156,7 +156,10 @@ for node in sushiTower {
 
 Run the game... Should look a lot better now.
 
-You're applying a *moveBy* action to move every piece of sushi in the sushi tower down by `55` pixels. You're also decreasing the *Z-Position* of each piece.  If you recall every time a new piece is added the *Z-Position* is incremented, the problem here is as the position climbs it will eventually become higher than other visual elements such as our UI.  This way you keep the *Z-Position* of all the pieces in a manageable range.
+You're applying a *moveBy* action to move every piece of sushi in the sushi tower down by `55` pixels. You're also
+decreasing the *Z-Position* of each piece.  If you recall every time a new piece is added the *Z-Position* is incremented,
+the problem here is as the position climbs it will eventually become higher than other visual elements such as our UI.  
+This way you keep the *Z-Position* of all the pieces in a manageable range.
 
 #Animating the sushi
 
@@ -174,60 +177,62 @@ Time for you to add a bit of polish and create two new action animations.
 >
 > ![FlipRight action](../Tutorial-Images/xcode_spritekit_action_flipright.png)
 
-Great, you will need a FlipLeft action as well, it is possible to *Duplicate* an action.  However, there is no way to rename it which isn't so great.
+Great, you will need a FlipLeft action as well, it is possible to *Duplicate* an action.  However, there is no way to 
+rename it which isn't so great.
 
 > [action]
 > Create a new action called `FlipLeft`
 > Copy the two actions from **FlipRight** into the **FlipLeft** timeline.
 > Modify the *Offset X* of the *Move Action* to `-300`
->
 
-Now you have two actions ready to be run in your game code. You will create a new method in *SushiPiece.swift* to facilitate this.
+Now you have two actions ready to be run in your game code. You will create a new method in *SushiPiece.swift* to 
+facilitate this.
 
 > [action]
 > Open *SushiPiece.swift* and add the following method to the class:
->
+
 ```
-func flip(side: Side) {
-  /* Flip the sushi out of the screen */
->
-  var actionName: String = ""
->  
-  if side == .Left {
+func flip(_ side: Side) {
+   /* Flip the sushi out of the screen */
+   
+   var actionName: String = ""
+   
+   if side == .left {
       actionName = "FlipRight"
-  } else if side == .Right {
+   } else if side == .right {
       actionName = "FlipLeft"
-  }
->  
-  /* Load appropriate action */
-  let flip = SKAction(named: actionName)!
->  
-  /* Create a node removal action */
-  let remove = SKAction.removeFromParent()
->  
-  /* Build sequence, flip then remove from scene */
-  let sequence = SKAction.sequence([flip,remove])
-  runAction(sequence)
+   }
+    
+   /* Load appropriate action */
+   let flip = SKAction(named: actionName)!
+    
+   /* Create a node removal action */
+   let remove = SKAction.removeFromParent()
+   
+   /* Build sequence, flip then remove from scene */
+   let sequence = SKAction.sequence([flip,remove])
+   run(sequence)
 }
 ```
->
 
-Read through the comments, most of this should already be familiar to you.  You may not have seen the last section of code in which you build a *SKAction.sequence*, which is simply joining actions together.  In this case when the **Flip** animation is complete you want the sushi to be removed from the game.  Currently in the code you are calling *removeFromParent()* to instantly remove the sushi, so the player will never see the anination.
+Read through the comments, most of this should already be familiar to you.  You may not have seen the last section of code
+in which you build a *SKAction.sequence*, which is simply joining actions together.  In this case when the **Flip**
+animation is complete you want the sushi to be removed from the game.  Currently in the code you are calling
+*removeFromParent()* to instantly remove the sushi, so the player will never see the anination.
 
 > [action]
 > Open *GameScene.swift* and replace the following inside `touchesBegan(...)`
->
+
 ```
 firstPiece.removeFromParent()
 ```
->
+
 > with
->
+
 ```
 /* Animate the punched sushi piece */
 firstPiece.flip(character.side)
 ```
->
 
 Now run the game.... Flying sushi!
 
