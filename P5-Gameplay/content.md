@@ -146,7 +146,7 @@ the player has been hit and Game over.
 /* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
 let firstPiece = sushiTower.first as SushiPiece!
 ```
->
+> Add this
 ```
 /* Check character side against sushi piece side (this is our death collision check)*/
 if character.side == firstPiece?.side {
