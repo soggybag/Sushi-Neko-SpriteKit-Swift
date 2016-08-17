@@ -16,11 +16,12 @@ The tower is simply an array of *SushiPiece* objects.
 
 > [action]
 > Open *GameScene.swift* and add the following property to the class:
-
+>
 ```
 /* Sushi tower array */
 var sushiTower: [SushiPiece] = []
 ```
+>
 
 ##Adding sushi to the tower
 
@@ -28,37 +29,37 @@ You are going to be adding lots of sushi, so it would be nice to add a method to
 
 > [action]
 > Add the following method to the *GameScene* class.
-
+>
 ```
 func addTowerPiece(side: Side) {
    /* Add a new sushi piece to the sushi tower */
-   
+>   
    /* Copy original sushi piece */
    let newPiece = sushiBasePiece.copy() as! SushiPiece
    newPiece.connectChopsticks()
-   
+>   
    /* Access last piece properties */
    let lastPiece = sushiTower.last
-   
+>   
    /* Add on top of last piece, default on first piece */
    let lastPosition = lastPiece?.position ?? sushiBasePiece.position
    newPiece.position = lastPosition + CGPoint(x: 0, y: 55)
-   
+>   
    /* Incremenet Z to ensure it's on top of the last piece, default on first piece*/
    let lastZPosition = lastPiece?.zPosition ?? sushiBasePiece.zPosition
    newPiece.zPosition = lastZPosition + 1
-   
+>   
    /* Set side */
    newPiece.side = side
-   
+>   
    /* Add sushi to scene */
    addChild(newPiece)
-   
+>   
    /* Add sushi piece to the sushi tower */
    sushiTower.append(newPiece)
 }
 ```
-
+>
 
 Have a read through the comments first...
 
@@ -86,12 +87,13 @@ starting pieces. This way you can always guarantee the cat starts in a safe posi
 
 > [action]
 > Add the following to the end of `didMoveToView(...)`
-
+>
 ```
 /* Manually stack the start of the tower */
 addTowerPiece(.none)
 addTowerPiece(.right)
 ```
+>
 
 Run the game... You should hopefully see the start of your tower with the pieces you added manually.
 
@@ -109,24 +111,24 @@ You want to create a Fun-RNG, take a RNG and add some logic on to make the outpu
 
 > [action]
 > Add this method to the *GameScene* class:
-
+>
 ```
 func addRandomPieces(total: Int) {
   /* Add random sushi pieces to the sushi tower */
-
+>
   for _ in 1...total {
-  
+>  
       /* Need to access last piece properties */
       let lastPiece = sushiTower.last as SushiPiece!
-      
+>      
       /* Need to ensure we don't create impossible sushi structures */
       if lastPiece.side != Side.none {
          addTowerPiece(Side.none)
       } else {
-      
+>      
          /* Random Number Generator */
          let rand = CGFloat.random(min: 0, max: 1.0)
-          
+>          
          if rand < 0.45 {
             /* 45% Chance of a left piece */
             addTowerPiece(.left)
@@ -141,6 +143,7 @@ func addRandomPieces(total: Int) {
   }
 }
 ```
+>
 
 It's handy to be able to specify the number of pieces to add at one time, again you need access to the last sushi
 piece added as it will help you make a decision on what piece should go next.  Remember that you seeded the stack with a few
@@ -157,11 +160,12 @@ Why don't you try out this method and add `10` new sushi pieces to the tower.
 
 > [solution]
 > Add the following code to the end of `didMoveToView(...)`
-
+>
 ```
 /* Randomize tower to just outside of the screen */
 addRandomPieces(10)
 ```
+>
 
 Run the game, it should look something like this, just slightly different :]
 
