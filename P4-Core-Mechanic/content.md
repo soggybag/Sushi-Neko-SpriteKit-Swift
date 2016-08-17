@@ -18,20 +18,21 @@ screen, the cat will be moved to the left/right side and then punch the first pi
 > Replace the `touchBegan(...)` method with the following:
 
 ```
-override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
    /* Called when a touch begins */
    
-   for touch in touches {
-      /* Get touch position in scene */
-      let location = touch.locationInNode(self)
-      
-      /* Was touch on left/right hand side of screen? */
-      if location.x > size.width / 2 {
-        character.side = .right
-      } else {
-        character.side = .left
-      }
-    }
+   /* We only need a single touch here */
+   let touch = touches.first!
+     
+   /* Get touch position in scene */
+   let location = touch.location(in: self)
+        
+   /* Was touch on left/right hand side of screen? */
+   if location.x > size.width / 2 {
+      character.side = .right
+   } else {
+      character.side = .left
+   }
 }
 ```
 
