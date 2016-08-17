@@ -146,11 +146,11 @@ better if the remaining sushi would drop down a position. Let's add this.
 
 ```
 /* Drop all the sushi pieces down one place */
-for node in sushiTower {
-   node.runAction(SKAction.moveBy(CGVector(dx: 0, dy: -55), duration: 0.10))
-   
+for sushiPiece in sushiTower {
+   sushiPiece.run(SKAction.move(by: CGVector(dx: 0, dy: -55), duration: 0.10))
+    
    /* Reduce zPosition to stop zPosition climbing over UI */
-   node.zPosition -= 1
+   sushiPiece.zPosition -= 1
 }
 ```
 
@@ -202,10 +202,10 @@ func flip(_ side: Side) {
    } else if side == .right {
       actionName = "FlipLeft"
    }
-    
+   
    /* Load appropriate action */
    let flip = SKAction(named: actionName)!
-    
+   
    /* Create a node removal action */
    let remove = SKAction.removeFromParent()
    
