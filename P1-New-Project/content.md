@@ -8,8 +8,9 @@ slug: new-spritekit-project
 > [action]
 > Create a new *Game* project in Xcode named `SushiNeko` and check the *Language* is set to `Swift` and 
 > *Game Technology* is set to `SpriteKit`.
-> ![Xcode new project](../Tutorial-Images/xcode_new_project.png)
+> ![Xcode new project](../Tutorial-Images/xcode_new_project-1.png)
 >
+> ![Xcode new project](../Tutorial-Images/xcode_new_project-2.png)
 
 ##Importing Resources
 
