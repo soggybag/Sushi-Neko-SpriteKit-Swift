@@ -182,9 +182,7 @@ Time to give the player some points.
 ```
 /* Increment Health */
 health += 0.1
-```
 >
-```
 /* Increment Score */
 score += 1
 ```
