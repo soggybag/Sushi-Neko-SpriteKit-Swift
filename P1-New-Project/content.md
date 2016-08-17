@@ -29,10 +29,11 @@ SpriteKit is missing some useful functionality, thankfully we have bundled some 
 > Download the [MakeSchool Utilities](../Utils.zip), unpack the folder and add it to your project as you
 > did with the art pack.
 >
-
-Your project structure should hopefully look similar to this:
-
-![Xcode project structure](../Tutorial-Images/xcode_project_structure_new.png)
+>
+> Your project structure should hopefully look similar to this:
+>
+>![Xcode project structure](../Tutorial-Images/xcode_project_structure_new.png)
+>
 
 #Summary
 
