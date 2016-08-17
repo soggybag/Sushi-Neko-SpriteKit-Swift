@@ -78,28 +78,29 @@ Next up you will create a custom sushi class called *SushiPiece*
 > [action]
 > Create a new *Swift* file (`File > New > File > Swift File`) and name it `SushiPiece.swift`.
 > Replace the contents of this file with:
-
+>
 ```
 import SpriteKit
-
+>
 class SushiPiece: SKSpriteNode {
-    
+>    
     /* Chopsticks objects */
     var rightChopstick: SKSpriteNode!
     var leftChopstick: SKSpriteNode!
-    
+>    
     /* You are required to implement this for your subclass to work */
     override init(texture: SKTexture?, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
     }
-    
+>    
     /* You are required to implement this for your subclass to work */
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+>    
 }
 ```
+>
 
 This gives you a basic subclass of *SKSpriteNode*, with properties ready to connect to the chopsticks.
 Before you do this, you need to set the **sushiBasePiece** class to *SushiPiece*, you can do this via the 
