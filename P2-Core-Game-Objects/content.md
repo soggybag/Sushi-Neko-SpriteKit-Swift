@@ -208,7 +208,67 @@ required init?(coder aDecoder: NSCoder) {
 ```
 >
 
-###
+### ButtonNode
+
+Button node will follow a similar arrangement but you will want ButtonNode to be a little more flexible. Imagine that 
+ButtonNode is something you could use in other projects. You'll want to be able to initialize ButtonNode with any image. 
+
+> [action]
+> Add the following to the ButtonNode class.
+>
+```
+let defaultTexture: SKTexture
+>
+// MARK: - Init
+>
+init(defaultFileName: String) {
+    defaultTexture = SKTexture(imageNamed: defaultFileName)
+ >   
+    super.init(texture: defaultTexture, color: UIColor.clear, size: defaultTexture.size())
+}
+>
+required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+}
+```
+>
+> Notice that ButtonNode defines defaulTexture, an SKTexture. Think of an SKTexture as some artwork you can display in a 
+> sprite at any time. 
+
+###Create an instance of SushiPiece and ButtonNode
+
+Return to GameScene and create an instance of SushiPiece and ButtonNode. 
+
+> [action]
+> Add the following before `super.init(size:)`
+>
+```
+sushiBasePiece = SushiPiece()
+playButton = ButtonNode(defaultFileName: "button")
+```
+>
+> Notice you initialized ButtonNode with the defaultFileName, remember this was part the initializer. 
+>
+
+### healthBar and scoreLabel
+
+These two are created from some SpriteKit's default classes: SKSpriteNode and SKLabelNode. You can intialize these without
+creating a subclass. 
+
+> [action]
+> Add the following before `super.init(size:)`
+>
+```
+healthBar = SKSpriteNode(imageNamed: "life")
+scoreLabel = SKLabelNode(fontNamed: "Helvetica")
+```
+>
+> That should clear up any errors! While the project will run at this point you won't see anything on the screen yet. 
+> See the next section to learn why...
+
+## Conclusion
+
+In this section you learned how to create subclasses of some of SpriteKit's built in classes. 
 
 
 
