@@ -139,3 +139,72 @@ func setupPlayButton() {
 setupPlayButton()
 ```
 >
+
+## Setup healthbar
+
+The health bar will be made up of two elements. It has a background that frames it with the bar in the center. The bar
+will change width as the game plays, expanding from the left to right. 
+
+> [action]
+> Add the following after `MARK: - Setup`.
+> 
+```
+func setupHealthBar() {
+    let healthBack = SKSpriteNode(imageNamed: "life_bg")
+    addChild(healthBack)
+    healthBack.position.x = size.width / 2
+    healthBack.position.y = size.height - 50
+    healthBack.zPosition = 88
+>    
+    addChild(healthBar)
+    healthBar.anchorPoint.x = 0
+    healthBar.position.x = size.width / 2 - healthBar.size.width / 2
+    healthBar.position.y = healthBack.position.y
+    healthBar.zPosition = 99
+}
+```
+>
+> Here you created the background for the health bar as a local variable, you won't need a reference to this after this 
+> function runs. Next you positioned this image in the center, 50 points from the top of the screen. 
+>
+> Next you added the healthBAr as a child of the scene, and positioned in the same location as its background. Since the
+> healthbar will expand from the left, you set it's anchor.x to 0, this moved the anchor posint to the left side. 
+> This meant you needed to adjust the x postion by half the width of the bar. 
+>
+> Be sure to call setupHealthBar. Add the following after `super.init()`.
+> 
+```
+setupHealthBar()
+```
+>
+
+## Setup scoreLabel
+
+Let's follow the same steps again and setup the scoreLabel. 
+
+> [action]
+> Add the following after `MARK: - Setup`.
+> 
+``` 
+func setupScoreLabel() {
+   addChild(scoreLabel)
+   scoreLabel.fontSize = 56
+   scoreLabel.position.x = size.width / 2
+   scoreLabel.position.y = size.height * 0.66
+   scoreLabel.text = "0"
+}
+```
+>
+> Here you added the scoreLabel as a child of the scene. The label displays text so you set the font size, and the default 
+> text that appears in the label. 
+> 
+> Last call `setupScoreLabel()` after `super.init()`.
+> 
+```
+setupScoreLabel()
+```
+>
+
+Test your work. At this point all of the object should be in the horizontal center of the screen. Some are overlapping
+others. This is okay you will be working these details and adding game play in the coming sections. 
+
