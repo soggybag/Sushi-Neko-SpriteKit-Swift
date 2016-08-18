@@ -1,165 +1,141 @@
----
-title: Generating the Sushi Tower
-slug: the-sushi-tower
----
+# Displaying Objects 
 
-The *Sushi Tower* is at the heart of your game, you will be dynamically generating an infinite tower. You will use an array of *SushiPieces* to form this tower, initially you will create just enough pieces to be tall enough to cover the screen, there is no need to generate thousands of pieces :]  
+In the last section you created various objects to display, mostly SKSpriteNodes, your SKSpriteNode sublcasses, and an
+SKLabelNode, but just creating these doesn't make them appear on the screen. To be visible on the screen every node must 
+be a child of the Scene, or a child of another node that is child of the scene. 
 
-Every time the cat punches a piece out of existence, you will then add a new piece to the top of the array, to create the endless cycle of the sushi tower.
+Make an object a child of a node by calling addChild(node:). 
 
-#Building the tower
+Note! You can't call any methods of a class before super.init()! 
 
-The tower is simply an array of *SushiPiece* objects.
+## Setup
 
-> [action]
-> Open *GameScene.swift* and add the following property to the class:
->
-```
-/* Sushi tower array */
-var sushiTower: [SushiPiece] = []
-```
->
+To keep out code organized we'll put all of our setup code into one or more setup methods. You will call on these setup 
+methods from init().
 
-##Adding sushi to the tower
+## Add a Background
 
-You are going to be adding lots of sushi, so it would be nice to add a method to perform this repetitive task.
+Here you will make a sprite node that will display the background image. You wn't need a reference to it after its created 
+so you didn't create a variable for it earlier. 
 
 > [action]
-> Add the following method to the *GameScene* class.
+> Add the following to your GameScene class
 >
 ```
-func addTowerPiece(side: Side) {
-   /* Add a new sushi piece to the sushi tower */
+// MARK: - Setup
 >
-   /* Copy original sushi piece */
-   let newPiece = sushiBasePiece.copy() as! SushiPiece
-   newPiece.connectChopsticks()
->   
-   /* Access last piece properties */
-   let lastPiece = sushiTower.last
->   
-   /* Add on top of last piece, default on first piece */
-   let lastPosition = lastPiece?.position ?? sushiBasePiece.position
-   newPiece.position = lastPosition + CGPoint(x: 0, y: 55)
->   
-   /* Incremenet Z to ensure it's on top of the last piece, default on first piece*/
-   let lastZPosition = lastPiece?.zPosition ?? sushiBasePiece.zPosition
-   newPiece.zPosition = lastZPosition + 1
->   
-   /* Set side */
-   newPiece.side = side
->   
-   /* Add sushi to scene */
-   addChild(newPiece)
->   
-   /* Add sushi piece to the sushi tower */
-   sushiTower.append(newPiece)
+func setupBackground() {
+   let background = SKSpriteNode(imageNamed: "background")
+   addChild(background)
+   background.anchorPoint = CGPoint(x: 0, y: 0)
+   background.size = size
 }
 ```
 >
+> Here you made a new sprite stored in a local variable, background is only accessible in setupBackground(). Then you
+> used addChild to make it a child of GameScene, an SKScene subclass. Next you moved the anchor point to the lower left 
+> corner. Last you set the size of the image to match the size of game scene. Remember earlier you initialized GameScene
+> with the size of the View in GameViewController. 
+> 
+> Now call `setupBackground()` in init. 
+> 
+> [action]
+> Add the following after `super.init()`.
+>
+```
+setupBackground()
+```
+>
 
-Have a read through the comments first...
+Test your work. Run your project int eh simulator. You should see something like this: 
 
-The first step is to copy the original **sushiBasePiece**, we could have created this as a seperate *SKS* file however given the frequent usage, performance will be better simply copying it.  To be able to copy an object it must conform to the [NSCopying](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Protocols/NSCopying_Protocol/) protocol. *SKSpriteNode* is a subclass of *SKNode* which conforms and implements the *NSCopying* protocol.
+![]()
 
-You want to stack each piece of sushi on top of the previous one.  There is one exception, the very first piece to be added to the tower will not have a previous piece in the tower.  In this case you effectively use **sushiBasePiece** as the first piece.
+## Add some constants
 
-Why increment the *Z Position*? Well to maintain that isometric look of the sushi you always want the top of the most recent piece to be visible.
-
-When you set the type of sushi via the *side* property the *didSet* observer in *SushiPiece* will show the correct chopstick.
-
-The *newPiece* is then added to the scene and also added to the *sushiTower* array with `append`.
-
-##Seeding the tower
-
-Before you move on top random generation, it would be a good idea to test this works and stack the tower with a couple of starting pieces. This way you can always guarantee the cat starts in a safe position.
+When you have numbers that might apper in several places it'a good idea to store them in a variable. You need two numbers. 
+One to set the vertical location of the first sushi piece, and another to hold the height of sushi pieces. 
 
 > [action]
-> Add the following to the end of `didMoveToView(...)`
->
+> Add the following to the top your GameScene class. 
+> 
 ```
-/* Manually stack the start of the tower */
-addTowerPiece(.None)
-addTowerPiece(.Right)
+/* Some useful numbers */
+let sushiPieceHeight: CGFloat = 55
+let firstPieceY: CGFloat = 200
 ```
->
+> 
 
-Run the game... You should hopefully see the start of your tower with the pieces you added manually.
+## Setup player sprite
 
-![Screenshot Sushi Tower Basic](../Tutorial-Images/screenshot_sushi_tower_basic.png)
-
-Time to stack the sushi and create that random element.
-
-#Random sushi generator
-
-If you added the sushi using a true RNG (Random Number Generator) with a value of `.None, .Left, .Right`, it would most likely become problematic very quickly.  If you create a `.Left` piece followed by a `.Right` piece, there is nowhere for the cat to go and death will be unavoidable.  Which isn't much fun for the player.
-
-You want to create a Fun-RNG, take a RNG and add some logic on to make the output fun and appropriate for your game.
+Next let's follow the same procedure you used with the background to set up the player. 
 
 > [action]
-> Add this method to the *GameScene* class:
->
+> Add the following below `// MARK: - Setup`
+> 
 ```
-func addRandomPieces(total: Int) {
-  /* Add random sushi pieces to the sushi tower */
->
-  for _ in 1...total {
->    
-      /* Need to access last piece properties */
-      let lastPiece = sushiTower.last as SushiPiece!
->      
-      /* Need to ensure we don't create impossible sushi structures */
-      if lastPiece.side != .None {
-          addTowerPiece(.None)
-      } else {
->          
-          /* Random Number Generator */
-          let rand = CGFloat.random(min: 0, max: 1.0)
->      
-          if rand < 0.45 {
-              /* 45% Chance of a left piece */
-              addTowerPiece(.Left)
-          } else if rand < 0.9 {
-              /* 45% Chance of a right piece */
-              addTowerPiece(.Right)
-          } else {
-              /* 10% Chance of an empty piece */
-              addTowerPiece(.None)
-          }
-      }
-  }
+func setupPlayer() {
+    addChild(player)
+    player.position.x = size.width / 2
+    player.position.y = firstPieceY
+    player.zPosition = 99
 }
 ```
 >
-
-It's handy to be able to specify the number of pieces to add at one time, again you need access to the last sushi
-piece added as it will help you make a decision on what piece should go next.  Remember that you seeded the stack with a few manual pieces so there will always be some sushi in the tower.
-
-The *random* function is called to generate a *CGFloat* between `0` and `1`, think of it as the equivalent of rolling a number between 0 and 100. You can then take that value and check it against your game chance weights, in this case if it's under `0.45` e.g. You want to assign a weight with 45% chance of this event happening. Then a `.Left` sushi will be produced and added to the tower.
-
-##Stocking the sushi tower
-
-Why don't you try out this method and add `10` new sushi pieces to the tower.
-
-> [solution]
-> Add the following code to the end of `didMoveToView(...)`
->
+> Next call `setupPlayer()` below `super.init()`.
+> 
 ```
-/* Randomize tower to just outside of the screen */
-addRandomPieces(10)
+setupPlayer()
 ```
 >
+> Here you added the player sprite as a child of the scene. Then you set it's x position to half the width of the screen
+> and it's y position to firstPieceY. The zPosition determins the stacking order, or what is front of what. This number 
+> is arbitrary, we just need to make sure it's higher than the other objects so the player appears on top. 
+> 
 
-Run the game, it should look something like this, just slightly different :]
+## Setup SushiBasePiece
 
-![Screenshot Sushi Tower Stacked](../Tutorial-Images/screenshot_sushi_tower_stacked.png)
+This is the first sushi piece on the stack. It's at the bottom of the stack at the same y value as the cat. 
 
-#Summary
+> [action]
+> Add the following after `MARK: - Setup`.
+> 
+```
+func setupSushi() {
+   addChild(sushiBasePiece)
+   sushiBasePiece.position.x = size.width / 2
+   sushiBasePiece.position.y = firstPieceY
+}
+```
+>
+> Then call `setupSushi()`, add the following after `super.init()`.
+>
+```
+setupSushi()
+```
+>
+> Here you added the first sushi piece as a child of the scene. Then positioned at in the middle of the screen on the x and 
+> set the y to firstPieceY. 
+> 
 
-You're making real progress, the sushi tower is the heart of this game mechanic.  
+## Setup playButton
 
-You've learnt to
+Do it all again for the playButton!
 
-- Dynamically generate sushi pieces and manage them in an array.  
-
-Next up, bringing the cat to life.
+> [action]
+> Add the following after `MARK: - Setup`. 
+> 
+```
+func setupPlayButton() {
+    addChild(playButton)
+    playButton.position.x = size.width / 2
+    playButton.position.y = 75
+}
+```
+>
+> Then add a call to `setupPlayButton()` in 'super.init()`.
+> 
+```
+setupPlayButton()
+```
+>
