@@ -1,3 +1,8 @@
+---
+title: Displaying Objects
+slug: displaying-objects
+---
+
 # Displaying Objects 
 
 In the last section you created various objects to display, mostly SKSpriteNodes, your SKSpriteNode sublcasses, and an
