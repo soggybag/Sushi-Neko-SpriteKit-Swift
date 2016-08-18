@@ -1,3 +1,8 @@
+---
+title: Working out the details
+slug: working-out-the-details
+---
+
 # Working out the details
 
 In this section you will create a stack of sushi pieces. To do this you will add some helper functions, and call these after
