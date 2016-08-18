@@ -134,6 +134,8 @@ intializer for SKSpriteNode is:
 SKSpriteNode(texture: SKTexture?, color: UIColor, size: CGSize)
 ```
 
+###Player
+
 > [action]
 > Add an initilizer to Player. Add the following to the player class:
 >
@@ -151,6 +153,62 @@ init() {
 >
 > Now any time you create an instance of Player it will appear with the image: character1. Notice the color is clear, or
 > transparent, and the size is the same size as the texture. 
+
+You should see an error, a red octogon with a white dot in the center. Just like SKScene SKSpriteNode confroms to NSCoding. 
+Which means you need to include init with coder. Let Xcode write this for you. 
+
+> [action]
+> Click the red octogon with the white dot. When the message pops up double click the line that begins "Fix it..."
+> 
+> This should add: 
+>
+```
+required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+}
+```
+>
+
+Great, now you can make an instance of Player, and it will display the image: character1. 
+
+###Create an instance of Player
+
+Head back to GameScene.swift and create an instance of Player in init().
+
+> [action]
+> Add the following in GameScene init(size:) before super.init(size:)
+>
+```
+player = Player()
+```
+>
+
+### SushiPiece
+
+Open SushiPiece.swift and an intializer. This is also an SKSpriteNode subclass and as such you will need to call the
+designated initializer. Don't forget you can get Xcode to help you write the required init with coder for you. 
+
+> [action]
+> Add the following to SushiPiece. 
+> 
+```
+// MARK: - Init
+>
+init() {
+>
+    let texture = SKTexture(imageNamed: "roll")
+>    
+    super.init(texture: texture, color: UIColor.clear, size: texture.size())
+>
+}
+>
+required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+}
+```
+>
+
+###
 
 
 
