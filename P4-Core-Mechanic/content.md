@@ -5,7 +5,9 @@ slug: working-out-the-details
 
 # Working out the details
 
-
+The game requires some more features. The cat needs to move from side to side and punch the sushi roll. The Sushi rolls 
+might have chop sticks sticking out on the left or the right. This section will add these features. For convenience these 
+things will be incorporated into the Player class, and SushiPiece class. 
 
 ## Define the Side enum
 
