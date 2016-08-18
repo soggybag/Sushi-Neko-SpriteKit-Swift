@@ -224,6 +224,42 @@ side = .none
 > Try setting the value here to .left, or .right and testing your project. 
 > 
 
+## Add functionality to the button 
+
+The ButtonNode class can be used in other projects any time you need a simple button. To make it useful it should 
+be able to handle taps by executing a custom block of code. 
+
+> [action]
+> Add the following to the top of the ButtonNode class. 
+```
+var selectedHandler: () -> Void = { print("No button action set") }
+```
+>
+> The type for `selectedHandler` is function that receives no parameters, and returns nothing. 
+> 
+> Next, add the following to the ButtonNode class. 
+> 
+```
+// MARK: - Touch events
+>
+override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    selectedHandler()
+}
+```
+> 
+> This allows ButtonNode instances to handle touch events by executing their selectedHandler. 
+>
+> There is one more step. Nodes don't normally handle touches for efficiency. To allow ButtonNodes to handle touches
+> add the following after `super.init()`.
+> 
+```
+isUserInteractionEnabled = true
+```
+> 
+> Test your work. Tapping the play button should display the message "No button action set" in the console. You will 
+> be making better use of the selectedHandler in the next section. 
+> 
+
 
 
 
