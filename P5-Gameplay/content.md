@@ -1,229 +1,147 @@
 ---
-title: Turning a mechanic into a game
-slug: gameplay
+title: Stacking Sushi
+slug: stacking-sushi
 ---
 
-What is the difference between a game mechanic and a game? You've built the core game mechanic yet on it's own this is not very satisfying for the player.  You need to wrap it up now into a game, the best advice is always, keep it simple!
+# Stacking Sushi
 
-- What is the challenge for the player?
-- How can you show the player progression?
-- What UI elements are needed?
-- Tracking the gamestate
 
-##The challenge
+## Define the sushi tower
 
-How to challenge the player? You will be adding a health bar that will progressively decrease as time goes on.  The player can refresh their health with every successful sushi piece knockout.
-
-##The progression
-
-The classic indicator of progression is to introduce a scoring element.  You will add a score counter for every sushi piece knocked out.
-
-##The User Interface
-
-Let's keep it simple to start with and add a Play button that will also serve as the restart button upon the player's death.
-
-#GameState management
-
-As it stands we have no idea what state the game is in, before we introduce additional elements we need to know what state the game is in.  Are we waiting for the player to press play? Is the game in progress? Did the player just die?
-
-Previously you used an *Enumeration* type to define the possible *side* states for the cat and sushi.
+The game will create a tower of Suhi each a SushiPiece instance. You will use an array to keep track of these. 
 
 > [action]
-> Add the following code to the top of *GameScene.swift*
->
+> Add the following to the top of the GameScene class. 
+> 
 ```
-/* Tracking enum for game state */
-enum GameState {
-    case Title, Ready, Playing, GameOver
+/* Sushi tower array */
+var sushiTower: [SushiPiece] = []
+```
+> 
+
+## Generating random sushi pieces
+
+Your program needs to generate a stack of sushi pieces. To make the game playable you need to have some rules. 
+
+- The first piece, at the bottom of the stack, has no chopsticks side = .none
+- If the last piece had chopsticks, side .left, or .right, the next piece should be .none
+
+### Note on generating random numbers
+
+Swift provides the `arc4random_uniform(n)`. This function returns a random integer in the range of 0 to n - 1. For example,
+`arc4random_uniform(100)` returns a random number between 0 and 99. The type of number is UInt32. To use this with 
+SpriteKit you'll need to convert to a CGFloat. 
+
+## Generate random sides
+
+ Add this helper function to generate a random value you can use to set the side of a SushiPiece. 
+ 
+ > [action]
+ > 
+ ```
+ // MARK: - Utility Functions
+>
+func randomSide() -> Side {
+    let r = CGFloat(arc4random_uniform(100)) / 100
+    if r < 0.45 {
+        return .left
+    } else if r < 0.9 {
+        return .right
+    }
+    return .none
 }
 ```
 >
+> This function returns a Side 45% of the time it's .left, 45% it's .right, and 10% it's .none. 
+>
 
-You will need to implement a tracking property to the GameScene class, let's default it to `.Title` as you would expect
-this to be first state the player experiences after opening the game.
+## Generate SushiPices
+
+Add another function to make SushiPieces. This function will position the pieces, add them as child objects, and set the 
+side. 
+
+This function needs to look at previous piece in the sushiTower array, this piece below the new piece, to set it's position 
+and side. If the array is empty it will use the sushiBasePiece. 
 
 > [action]
-> Add the following property to the *GameScene* class.
+> Add the following below `// MARK: - Utility Functions`.
+>
+```
+func addSushiPiece() {
+    let newPiece = SushiPiece()
+    addChild(newPiece)
+>    
+    if let lastPiece = sushiTower.last {
+        newPiece.position.x = lastPiece.position.x
+        newPiece.position.y = lastPiece.position.y + sushiPieceHeight
+        newPiece.zPosition = sushiBasePiece.zPosition + 1
+        if lastPiece.side == .none {
+            newPiece.side = randomSide()
+        } else {
+            newPiece.side = .none
+        }
+    } else {
+        newPiece.position.x = sushiBasePiece.position.x
+        newPiece.position.y = sushiBasePiece.position.y + sushiPieceHeight
+        newPiece.zPosition = sushiBasePiece.zPosition + 1
+    }
+    sushiTower.append(newPiece)
+}
+```
+> 
+> Now create 10 default pieces of sushi to start the game. Add the following at the end of the `setupSushi()` method.
+>
+```
+for _ in 1 ... 10 {
+    addSushiPiece()
+}
+```
+> 
+> Test your project. You should see a tower of suhsi sprouting chopsticks at random. 
+> 
+
+## Game State 
+
+The game will go through several states as you play. 
+
+- Title, in this state the game is waiting for you to tap the play button
+- Ready, in this state the game is ready to play waiting for you to make the first tap
+- Playing, in this state you are playing the game
+- GameOver, in this state the game is over
+
+> [action]
+> Create a new Swift file. Name this file: GameState. Add the following to your new file. 
+> 
+```
+/* Enum for tracking game state */
+enum GameState {
+    case title, ready, playing, gameOver
+}
+```
+> 
+> 
+
+## Add game state to GameScene
+
+Now it's time to make use of the new GameState Enum in GameScene. 
+
+> [action]
+> Add the following to the top of the GameScene class. 
 >
 ```
 /* Game management */
-var state: GameState = .Title
+var state: GameState = .title
 ```
->
+> 
 
-##Play button
+    
 
-When should you change the GameState change from `.Title` to `.Ready`? Let's add a play button.
 
-> [action]
-> Open *GameScene.sks* and drag *button.png* to the bottom-middle of the scene, just below the sushi base.
-> Set *Name* to `playButton`, change *Custom Class* to `MSButtonNode`.
 
-<!-- -->
 
-> [info]
-> SpriteKit does not come with an easy way to make buttons so we created a basic button class called *MSButtonNode* for you.
-> Feel free to explore this class if you've not comes across it before, it's in the **Utils** folder in the *Project Navigator*.  The *MSButtonNode* class is explored in greater detail in the *Hoppy Bunny Tutorial*
->
 
-Next you need to code connect the *playButton* to the **GameScene* class**, see if you can do this yourself.
 
-> [solution]
-> Open *GameScene.swift* and add following property to the class:
->
-```
-var playButton: MSButtonNode!
-```
->
-> Next create the connection in `didMoveToView(...)`
->
-```
-/* UI game objects */
-playButton = childNodeWithName("playButton") as! MSButtonNode
-```
->
 
-Now the button is connected you need to add some code to execute when the button is touched.
 
-> [action]
-> Add the following code to `didMoveToView(...)`
->
-```
-/* Setup play button selection handler */
-playButton.selectedHandler = {
->
-   /* Start game */
-   self.state = .Ready
-}
-```
->
 
-Great, now you are changing the game state state, yet on it's own it doesn't mean much.  You need to use the game state to enable/disable various elements of the game.  You don't want the cat to be able to move until the game is in a `.Ready` state.
 
-##Disabling touch
-
-> [action]
-> Add the following code to the top of `touchesBegan(...)`:
->
-```
-/* Game not ready to play */
-if state == .GameOver || state == .Title { return }
-/* Game begins on first touch */
-if state == .Ready {
-   state = .Playing
-}
-```
->
-
-You want to disable touch when the player is not `.Playing`, the first line covers this by simply returning from the method when the player is on the title screen or dead.
-
-The next line adds a little nuance, when the player press the button the game changes to a `.Ready` state.  However, we don't want the game to begin until that first screen touch by the player.
-
-Run the game... Hopefully you can't control the cat until you've hit the play button first :]
-
-#Game Over
-
-You added a `.GameOver` state, so let's look at the ways the player can die:
-
-- The player gets hit by a chopstick
-- The player runs out of health
-
-##Death by chopstick
-
-If the player doesn't dodge the chopsticks they should die, there is no need for any advanced collision detection.  You will want to check the *side* of the first piece of sushi against the *side* of the cat.  If they are the same then the player has been hit and Game over.
-
-> [action]
-> Add the following code in `touchesBegan(...)` after:
->
-```
-/* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
-let firstPiece = sushiTower.first as SushiPiece!
-```
->
-```
-/* Check character side against sushi piece side (this is our death collision check)*/
-if character.side == firstPiece.side {
->
-   /* Drop all the sushi pieces down a place (visually) */
-   for node:SushiPiece in sushiTower {
-       node.runAction(SKAction.moveBy(CGVector(dx: 0, dy: -55), duration: 0.10))
-   }
->
-   gameOver()
->
-   /* No need to continue as player dead */
-   return
-}
-```
->
-
-That was a cheap and easy collision check, you may have noticed the visual sushi tower drop code is being used in the same method twice.
-
-> [challenge]
-> Why don't you refactor this code into a new method?
-
-##Adding the gameover method
-
-Now you need to add a *gameOver* method, you will want to:
-
-- Set the gameState to `.GameOver`.
-- Provide a way for the player to restart the game
-- Be nice to add some visual indicator of death
-
-> [action]
-> Add this new method to the *GameScene* class:
->
-```
-func gameOver() {
-    /* Game over! */
->  
-    state = .GameOver
->    
-    /* Turn all the sushi pieces red*/
-    for node:SushiPiece in sushiTower {
-        node.runAction(SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.50))
-    }
->    
-    /* Make the player turn red */
-    character.runAction(SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.50))
->    
-    /* Change play button selection handler */
-    playButton.selectedHandler = {
->        
-        /* Grab reference to our SpriteKit view */
-        let skView = self.view as SKView!
->        
-        /* Load Game scene */
-        let scene = GameScene(fileNamed:"GameScene") as GameScene!
->        
-        /* Ensure correct aspect mode */
-        scene.scaleMode = .AspectFill
->        
-        /* Restart GameScene */
-        skView.presentScene(scene)
-    }
-}
-```
->
-
-Read through the comments, most of this should be familiar. For a visual effect you're using the *SKAction.colorizeWithColor* to turn
-the tower and cat red.
-
-> [challenge]
-> Have some fun with the game over sequence :]
-
-Run the game... It should look like this.
-
-![Animated game over](../Tutorial-Images/animated_cat_death.gif)
-
-#Summary
-
-Great progress, you now have a functional game!
-
-You've learnt to:
-
-- Manage your game through use of gamestates
-- Add basic UI
-- Implement code based collision detection
-
-In the next chapter, let's expand upon the gameplay with the health and score mechanics.
