@@ -133,8 +133,24 @@ Now it's time to make use of the new GameState Enum in GameScene.
 var state: GameState = .title
 ```
 > 
+> 
 
-    
+### Tapping the play button
+
+When you tap the play button the game state should change to ready.
+
+> [action]
+> Add the following to end of `setupButton()`.
+> 
+```
+/* Setup play button selection handler */
+playButton.selectedHandler = {
+    /* Start game */
+    self.state = .ready
+}
+```
+> 
+> 
 
 
 
