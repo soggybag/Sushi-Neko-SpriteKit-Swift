@@ -150,7 +150,91 @@ playButton.selectedHandler = {
 }
 ```
 > 
+> This won't have any visible effect at the moment. You need some more logic to run the game.  
+>
+
+## Game Logic 
+
+Tapping on the screen causes the cat to punch some sushi. The sushi flies off the screen opposite the cat. At this point
+all of the sushi descend. If the bottom sushi piece has a chopstick on the same side as the cat the player loses. This is
+the core game mechanic. You need roll some code to make this work. 
+
+The mechanic above really centers around the tap. At the moment you tap you can determine all of the logica above because
+you know or can ask:
+
+- Which side of the screen the tap occured?
+- What is the side of the cat?
+- What is the side of the next sushi piece?
+
+From this information you can give points, whack cat, and move sushi. 
+
+### Ignore touches when the game is over
+
+If the game is over, or the game is in title mode we can ignore touch events. 
+
+> [action]
+> Add the following at the **top** of `touchesBegan()`.
+>
+```
+/* Game not ready to play */
+if state == .gameOver || state == .title { return }
+```
+>
+> This exits the function early if we aren't ready or playing. 
+>
+
+### Switch from ready to playing
+
+If the game is in the ready state you're ready to play at the firts tap. 
+
+> [action]
+> Add the following just below `if state == .gameState...`.
+>
+```
+/* Game begins on first touch */
+if state == .ready {
+    state = .playing
+}
+```
+>
+> If the state was ready we enter the state becomes playing.
+>
+
+### Adding the flip action
+
+Before we can finish the game logic we need define some actions to "flip" pieces to the left or right as they are punched. 
+You will do this by creating a utility function: `flip(piece:, side:)`. This method takes the piece to flip, and which 
+side to flip towards. 
+
+> [action]
+> The following after `// MARK: - Utility`. 
 > 
+```
+func flip(piece: SushiPiece, side: Side) {
+    var x: CGFloat = 300
+    var r = CGFloat(M_PI_2)
+>    
+    if player.side == .right {
+        x = -x
+        r = -r
+    }
+ >   
+    let moveAction = SKAction.moveBy(x: x, y: 0, duration: 0.5)
+    let rotateAction = SKAction.rotate(byAngle: r, duration: 0.5)
+    let moveAndRotate = SKAction.group([moveAction, rotateAction])
+    let removeAction = SKAction.removeFromParent()
+    let sequenceAction = SKAction.sequence([moveAndRotate, removeAction])
+>    
+    piece.run(sequenceAction)
+}
+```
+> 
+> This function first calculates the x position and rotation (r) that will used to move the piece. If the side is right
+> it inverts these values. 
+> 
+> The next section needs some explanation. 
+>
+
 
 
 
