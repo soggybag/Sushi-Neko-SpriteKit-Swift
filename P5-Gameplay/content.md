@@ -232,8 +232,16 @@ func flip(piece: SushiPiece, side: Side) {
 > This function first calculates the x position and rotation (r) that will used to move the piece. If the side is right
 > it inverts these values. 
 > 
-> The next section needs some explanation. 
->
+> The next section builds a complex action. THe first step is to make an action that moves and rotates the suhi piece. You
+> did this with a group. Notice that moveAction and rotateAction, and grouped together into moveAndRotate. 
+> 
+> Next you want to run the moevAndRotate action and follow this by removing the sushiPiece from it's parent. Here you 
+> created removeAction, then made a sequence (sequenceAction) of moveAndRotate and removeAction. A sequence runs 
+> actions in series. 
+> 
+> Last you ran the sequenceAction on the piece of sushi. 
+> 
+
 
 
 
