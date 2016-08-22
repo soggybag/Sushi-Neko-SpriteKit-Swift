@@ -60,8 +60,8 @@ func randomSide() -> Side {
 Add another function to make SushiPieces. This function will position the pieces, add them as child objects, and set the 
 side. 
 
-This function needs to look at previous piece in the sushiTower array, this piece below the new piece, to set it's position 
-and side. If the array is empty it will use the sushiBasePiece. 
+This function needs to look at previous piece in the sushiTower array, this piece below the new piece, to set it's
+position and side. If the array is empty it will use the sushiBasePiece. 
 
 > [action]
 > Add the following below `// MARK: - Utility Functions`.
@@ -135,12 +135,12 @@ var state: GameState = .title
 > 
 > 
 
-### Tapping the play button
+## Tapping the play button
 
 When you tap the play button the game state should change to ready.
 
 > [action]
-> Add the following to end of `setupButton()`.
+> Add the following to end of `setupPlayButton()`.
 > 
 ```
 /* Setup play button selection handler */
@@ -168,7 +168,7 @@ you know or can ask:
 
 From this information you can give points, whack cat, and move sushi. 
 
-### Ignore touches when the game is over
+## Ignore touches when the game is over
 
 If the game is over, or the game is in title mode we can ignore touch events. 
 
@@ -183,7 +183,7 @@ if state == .gameOver || state == .title { return }
 > This exits the function early if we aren't ready or playing. 
 >
 
-### Switch from ready to playing
+## Switch from ready to playing
 
 If the game is in the ready state you're ready to play at the firts tap. 
 
@@ -200,7 +200,7 @@ if state == .ready {
 > If the state was ready we enter the state becomes playing.
 >
 
-### Adding the flip action
+## Adding the flip action
 
 Before we can finish the game logic we need define some actions to "flip" pieces to the left or right as they are punched. 
 You will do this by creating a utility function: `flip(piece:, side:)`. This method takes the piece to flip, and which 
@@ -231,7 +231,10 @@ func flip(piece: SushiPiece, side: Side) {
 > 
 > This function first calculates the x position and rotation (r) that will used to move the piece. If the side is right
 > it inverts these values. 
-> 
+>
+> Rotation in SpriteKit is measured in radians, one full rotation is 2 Pi. M_PI is a constant for PI. M_PI_2 is a cosntant
+> for half PI. In radians half PI is equivalent to 90 degrees. 
+>
 > The next section builds a complex action. THe first step is to make an action that moves and rotates the suhi piece. You
 > did this with a group. Notice that moveAction and rotateAction, and grouped together into moveAndRotate. 
 > 
@@ -240,6 +243,91 @@ func flip(piece: SushiPiece, side: Side) {
 > actions in series. 
 > 
 > Last you ran the sequenceAction on the piece of sushi. 
+> 
+
+## Punching sushi from the stack
+
+Now we can start punching sushi from the stack. To make this happen you need to remove the first sushiPiece from the 
+sushitower, this should be the piece at the bottom. Flipping, that is passing it to the flip function, will animate it off
+the screen and remove it. Then you need to add a new sushi piece from the stack. Last you need to move all of the
+sushi pieces down. 
+
+So far we have code to flip sushi pieces and add new sushi pieces. Later you will add code to move pieces down the 
+screen. 
+
+> [action]
+> Add the followng at the end of `touchesBegan()`. 
+> 
+```
+let firstPiece = sushiTower.removeFirst()
+flip(piece: firstPiece, side: player.side)
+addSushiPiece()
+```
+> 
+> This gets the first sushi piece in the tower array, while also removing it from the array. Next you passed that pieces
+> to the `flip()` function, this should move it off the screen and rmeove it from it's parent. Last add a new sushi piece
+> to the tower. 
+> 
+> Testing at this stage, tap the play button to start the game, tapping the left side should send a piece off to the right
+> tapping the right side should send a piece off the left. The pieces don't move down the screen yet. 
+> 
+
+## Moving the tower down
+
+You can take several approaches ot moving pieces down the screen. Actions are one choice. This tutorial will use
+`update()` instead. Update makes a good choice here for two reasons. First it will give you a look at `update()` an 
+important method of SKScene. Second, using Actions can be problematic if sushi pieces are removed faster than than the 
+action that is moving the pieces. 
+
+### update()
+
+Your scene calls update 60 frames per second (FPS) while the game is running. This is useful for moving game elements and 
+checking game logic while the game is running. In this case we will use update to position game pieces, constantly 
+moving them down the screen. 
+
+### It's not really 60 FPS
+
+The system attempts to call upate 60 times per second but do to processing speed the computer will not always achieve
+this. When `skView.showsFPS` is set to true you will see the FPS in the lower right of your screen. 
+
+Update like init may have lots of code. With init you added code to setup methods that were called from init. Use the same
+strategy here. 
+
+> [action]
+> Add the following to the GameScene class. 
+> 
+```
+// MARK: - Update 
+>
+override func update(_ currentTime: CFTimeInterval) {
+    moveTowerDown()
+}
+>
+func moveTowerDown() {
+    var n: CGFloat = 0
+    for piece in sushiTower {
+        let o = state == .gameOver ? 0 : sushiPieceHeight
+        let y = (n * sushiPieceHeight) + firstPieceY + o
+        piece.position.y -= (piece.position.y - y) * 0.5
+        piece.zPosition = n
+        n += 1
+    }
+}
+```
+> 
+> The update method calls `moveTowerDown()`. This method declares `n` to count the Sushi pieces. Then it loops through 
+> all of the sushi pieces in the sushi tower. For each piece it finds the y position for that pieces. Which is calculated 
+> as position in the array (`n`) times the height of the piece, plus the y position of the first piece. Now that you 
+> have found the y position of the piece you move the piece 50% of of the distance from it's current location to y 
+> position. Last set the z position of the piece and increment n. 
+> 
+> This line `let o = state == .gameOver ? 0 : sushiPieceHeight' is used to land the piece on the head of the cat when the 
+> game is over. Normally the peiecs stop one sushi piece height above the base piece. When the game is over the last 
+> piece moves down to to cover the base piece. 
+> 
+> Testing the game at this stage should be pretty satisfying. After tapping Play, you should be able to tap on the left 
+> and right to remove sushi pieces, the tower should fall as pieces are removed, and a new piece is added each time 
+> the first piece is removed. Endless sushi madness!
 > 
 
 
