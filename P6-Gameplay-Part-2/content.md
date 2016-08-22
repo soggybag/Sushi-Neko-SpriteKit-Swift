@@ -54,4 +54,24 @@ func gameOver() {
 > turns all of the sushi pieces red with an action: `SKAction.colorize(with: ...`, next do the same thing with the player,
 > 
 
+### Check cat whack with wasabi
+
+Next we need to check if the player will get whacked with wasabi. To do this you need to look at the first sushi piece
+and check it's side against the side of the player. If they match the player is whacked. 
+
+> [action]
+> Add the following directly after `let firstPiece = sushiTower.removeFirst()`. It's important this appears before
+> `flip(piece: firstPiece, side: player.side)`!
+>
+```
+/* Check character side against sushi piece side (this is our death collision check)*/
+if player.side == firstPiece.side {
+    gameOver()
+    /* No need to continue as player dead */
+    return
+}
+```
+>
+
+
 
